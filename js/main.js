@@ -11,6 +11,13 @@ class CountdownTimer{
     this.selector = selector;
     this.isActive = false;
     refs.stop.setAttribute("disabled", "disabled");
+    this.initTimer();
+  }
+
+  initTimer() {
+    document.querySelector(this.selector).innerHTML = this.timerTemplate({ days: this.pad(0), hours: this.pad(0), mins: this.pad(0), secs: this.pad(0) });
+    const restTime = this.getTime(0);
+    this.updateTimer(restTime);
   }
 
 
@@ -21,9 +28,9 @@ class CountdownTimer{
 
       const mins = this.pad(Math.floor((time % (1000 * 60 * 60)) / (1000 * 60)));
 
-    const secs = this.pad(Math.floor((time % (1000 * 60)) / 1000));
+      const secs = this.pad(Math.floor((time % (1000 * 60)) / 1000));
     
-    return { days, hours, mins, secs };
+      return { days, hours, mins, secs };
   };
   
   
@@ -48,6 +55,8 @@ class CountdownTimer{
     }, 1000);
 
   };
+
+  
 
   stop() {
     this.isActive = false;
@@ -98,5 +107,5 @@ const newTimer = new CountdownTimer({
   targetDate: new Date('September 17, 2021'),
 });
 
-refs.start.addEventListener('click', () => { newTimer.start(); });
-refs.stop.addEventListener('click', () => { newTimer.stop();});
+refs.start.addEventListener('click', newTimer.start.bind(newTimer));
+refs.stop.addEventListener('click',  newTimer.stop.bind(newTimer));
